@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/llCounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvHanjaCnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="입력된 한자 : %d" />
+        <TextView
+            android:id="@+id/tvChineseCnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="입력된 HSK : %d"/>
+        <TextView
+            android:id="@+id/tvJapaneseCnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="입력된 JLPT : %d"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnGetDB"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:text="DB 추출" />
+
+    <Button
+        android:id="@+id/btnMakeDB"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_above="@id/btnGetDB"
+        android:text="DB 생성"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/llCounts"
+        android:layout_above="@id/btnMakeDB"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#080808">
+
+    </ListView>
+
+</RelativeLayout>
