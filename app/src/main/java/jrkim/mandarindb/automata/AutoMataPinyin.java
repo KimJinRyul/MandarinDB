@@ -72,7 +72,7 @@ public class AutoMataPinyin {
                         } else if(RULE.compareTo(line.substring(0, 1)) == 0) {
                             mRules.encode(line.substring(1));
                         } else {
-
+                            // do nothing
                         }
                     }
                 }
@@ -143,33 +143,33 @@ public class AutoMataPinyin {
 
             for(int j = 0; j <= output.length() - strTemp.length(); j++) {
                 bMatched = false;
-                if(mSymbols.isSymbol(strTemp.charAt(0)) == true) {
-                    if(mSymbols.isElementOfSymbol(strTemp.charAt(0), output.charAt(j)) == true) {
+                if(mSymbols.isSymbol(strTemp.charAt(0))) {
+                    if(mSymbols.isElementOfSymbol(strTemp.charAt(0), output.charAt(j))) {
                         bMatched = true;
                     }
                 } else if(strTemp.charAt(0) == output.charAt(j)) {
                     bMatched = true;
                 }
 
-                if(bMatched == true) {
+                if(bMatched) {
                     for(int k = 1; k < strTemp.length(); k++) {
-                        if(mSymbols.isSymbol(strTemp.charAt(k)) == true) {
-                            if(mSymbols.isElementOfSymbol(strTemp.charAt(k), output.charAt(j + k)) == false) {
+                        if(mSymbols.isSymbol(strTemp.charAt(k))) {
+                            if(!mSymbols.isElementOfSymbol(strTemp.charAt(k), output.charAt(j + k))) {
                                 bMatched = false;
                             }
                         } else if(strTemp.charAt(k) != output.charAt(j + k)) {
                             bMatched = false;
                         }
                     }
-                    if(bMatched == true) { // 진짜 매칭~~
+                    if(bMatched) { // 진짜 매칭~~
                         bCompleted = true;
                         output = output.replaceFirst(strOrigin, strReplace);
                     }
                 }
-                if(bCompleted == true)
+                if(bCompleted)
                     break;
             }
-            if(bCompleted == true)
+            if(bCompleted)
                 break;
         }
 

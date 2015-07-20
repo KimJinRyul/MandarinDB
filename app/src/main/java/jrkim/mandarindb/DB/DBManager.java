@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.os.Handler;
+
+import jrkim.mandarindb.LogInfo;
+import jrkim.mandarindb.MainActivity;
 
 /**
  * Created by Jinryul on 15. 7. 17..
@@ -127,11 +130,11 @@ public class DBManager {
         return get(table, type, item).getCount() != 0;
     }
 
-    public boolean insertMandarin(String ganja, String bunja, String yakja,
+    public boolean insertMandarin(Handler handler, String ganja, String bunja, String yakja,
                                   String pinyin, String rawpinyin, String korean, String japanese, String meaning,
                                   int lvHanja, int lvHSK, int lvJLPT) {
         if(isExistInDB(TABLE_MANDARIN, TYPE_BUNJA, new String [] {bunja})) {
-            Log.e("jrkim", "During insert Mandarin \"" + bunja + "\" is already exist in DB");
+            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "한자 입력 중... \"" + bunja + "\"는 이미 DB에 있습니다."));
             return false;
         }
 
@@ -154,9 +157,9 @@ public class DBManager {
         return true;
     }
 
-    public boolean insertChinese(String ganja, String pinyin, String rawpinyin, String meaning, int lvHSK) {
+    public boolean insertChinese(Handler handler, String ganja, String pinyin, String rawpinyin, String meaning, int lvHSK) {
         if(isExistInDB(TABLE_CHINESE, TYPE_GANJA, new String [] {ganja})) {
-            Log.e("jrkim", "During insert Chinese \"" + ganja + "\" is already exist in DB");
+            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "중국어 입력 중... \"" + ganja + "\"는 이미 DB에 있습니다."));
             return false;
         }
 
@@ -167,13 +170,13 @@ public class DBManager {
             ch = "" + ganja.charAt(i);
             cursor = get(TABLE_MANDARIN, TYPE_GANJA, new String[] {ch});
             if(cursor.getCount() == 0) {
-                Log.e("jrkim", "During insert Chinese \"" + ch + "\" is not exist in DB");
+                handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "중국어 입력 중... \"" + ch + "\"자는 이미 DB에 없습니다."));
                 return false;
             } else {
                 while(cursor.moveToNext()) {
                     lv = cursor.getInt(cursor.getColumnIndex(DBConsts._LEVEL_HSK));
-                    if(lv > lvHSK) {
-                        Log.e("jrkim", "HSK Level : " + lvHSK + ", but mandarin " + ch + "\'s Level is " + lv);
+                    if(lv != lvHSK) {
+                        handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 HSK:" + lvHSK + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
                     }
                 }
             }
@@ -192,8 +195,45 @@ public class DBManager {
         return true;
     }
 
+
+    public boolean insertJapanese(Handler handler, String yakja, String japanese, String meaning, int lvJLPT) {
+        if(isExistInDB(TABLE_JAPANESE, TYPE_YAKJA, new String [] {yakja})) {
+            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "일본어 \"" + yakja + "\"는 이미 DB에 있습니다."));
+            return false;
+        }
+
+        String ch = "";
+        Cursor cursor = null;
+        int lv = 0;
+        for(int i = 0; i < yakja.length(); i++) {
+            ch = "" + yakja.charAt(i);
+            cursor = get(TABLE_MANDARIN, TYPE_YAKJA, new String[] {ch});
+            if(cursor.getCount() == 0) {
+                handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "일본어 입력 중... \"" + ch + "\"자는 DB에 없습니다."));
+                return false;
+            } else {
+                while(cursor.moveToNext()) {
+                    lv = cursor.getInt(cursor.getColumnIndex(DBConsts._LEVEL_JLPT));
+                    if(lv > lvJLPT) {
+                        handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 JLPT:" + lvJLPT + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                    }
+                }
+            }
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DBConsts._YAKJA, yakja);
+        values.put(DBConsts._JAPANESE, japanese);
+        values.put(DBConsts._MEANING, meaning);
+        values.put(DBConsts._LEVEL_JLPT, lvJLPT);
+        values.put(DBConsts._LEARNING, 0);
+        values.put(DBConsts._TESTED, "");
+        values.put(DBConsts._ANSWERED, "");
+        mDB.insert(DBConsts._TABLE_JAPANESE, null, values);
+        return true;
+    }
+
     public boolean delete(int table, int type, String [] item) {
         return mDB.delete(getTableName(table), getTypeName(type) + " = ?", item) > 0;
-
     }
 }
