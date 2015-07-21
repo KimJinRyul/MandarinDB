@@ -25,9 +25,7 @@ public class DBManager {
     public final static int TABLE_MANDARIN      = 1;
     public final static int TABLE_CHINESE       = 2;
     public final static int TABLE_JAPANESE      = 3;
-    public final static int TABLE_USERMANDARIN  = 4;
-    public final static int TABLE_USERCHINESE   = 5;
-    public final static int TABLE_USERJAPANESE  = 6;
+
 
     // 검색
     public final static int TYPE_GANJA          = 10;   // 간자체
@@ -48,9 +46,6 @@ public class DBManager {
             db.execSQL(DBConsts._CREATE_MANDARIN);
             db.execSQL(DBConsts._CREATE_CHINESE);
             db.execSQL(DBConsts._CREATE_JAPANESE);
-            db.execSQL(DBConsts._CREATE_USERMANDARIN);
-            db.execSQL(DBConsts._CREATE_USERCHINESE);
-            db.execSQL(DBConsts._CREATE_USERJAPANESE);
         }
 
         @Override
@@ -58,9 +53,6 @@ public class DBManager {
             db.execSQL("DROP TABLE IF EXIST " + DBConsts._TABLE_MANDARIN);
             db.execSQL("DROP TABLE IF EXIST " + DBConsts._CREATE_CHINESE);
             db.execSQL("DROP TABLE IF EXIST " + DBConsts._CREATE_JAPANESE);
-            db.execSQL("DROP TABLE IF EXIST " + DBConsts._CREATE_USERMANDARIN);
-            db.execSQL("DROP TABLE IF EXIST " + DBConsts._CREATE_USERCHINESE);
-            db.execSQL("DROP TABLE IF EXIST " + DBConsts._CREATE_USERJAPANESE);
             onCreate(db);
         }
     }
@@ -96,9 +88,6 @@ public class DBManager {
             case TABLE_MANDARIN:        strTableName = DBConsts._TABLE_MANDARIN;        break;
             case TABLE_CHINESE:         strTableName = DBConsts._TABLE_CHINESE;         break;
             case TABLE_JAPANESE:        strTableName = DBConsts._TABLE_JAPANESE;        break;
-            case TABLE_USERMANDARIN:    strTableName = DBConsts._TABLE_USERMANDARIN;    break;
-            case TABLE_USERCHINESE:     strTableName = DBConsts._TABLE_USERCHINESE;     break;
-            case TABLE_USERJAPANESE:    strTableName = DBConsts._TABLE_JAPANESE;        break;
         }
         return strTableName;
     }

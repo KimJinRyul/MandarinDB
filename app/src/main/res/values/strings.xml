@@ -3,4 +3,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="HANJA_CNT">입력된 한자 : %d</string>
+    <string name="HSK_CNT">입력된 HSK : %d</string>
+    <string name="JLPT_CNT">입력된 JLPT : %d</string>
 </resources>

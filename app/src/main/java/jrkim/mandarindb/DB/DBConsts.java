@@ -66,6 +66,7 @@ public class DBConsts {
                     _TESTED + " text not null, " +
                     _ANSWERED + " text not null);";
 
+    /*
     // table for User Custom Hanja Dictionary
     public final static String _TABLE_USERMANDARIN = "_table_usermandarin";
     public final static String _CREATE_USERMANDARIN =
@@ -102,4 +103,5 @@ public class DBConsts {
                     _LEARNING + " integer not null, " +
                     _TESTED + " text not null, " +
                     _ANSWERED + " text not null);";
+    */
 }

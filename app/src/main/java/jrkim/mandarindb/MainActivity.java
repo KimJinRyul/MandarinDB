@@ -2,14 +2,17 @@ package jrkim.mandarindb;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             case MESSAGE_COMPLETE:
             findViewById(R.id.btnMakeDB).setEnabled(true);
             findViewById(R.id.btnGetDB).setEnabled(true);
+            updateText();
             break;
             case MESSAGE_LOG:
                 mLogs.add(new LogInfo((String) msg.obj, msg.arg1));
@@ -69,21 +73,71 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         findViewById(R.id.btnMakeDB).setOnClickListener(this);
         findViewById(R.id.btnGetDB).setOnClickListener(this);
+        findViewById(R.id.btnDeleteLog).setOnClickListener(this);
 
         mListView = (ListView)findViewById(R.id.lvLogs);
         mAdapter = new LogAdapter(getApplicationContext(), mLogs);
         mListView.setAdapter(mAdapter);
+
+        updateText();
+    }
+
+    private void updateText() {
+        DBManager db = DBManager.getInstance(this);
+        db.open();
+
+        int mandarinCnt = db.getAll(DBManager.TABLE_MANDARIN).getCount();
+        int chineseCnt = db.getAll(DBManager.TABLE_CHINESE).getCount();
+        int japaneseCnt = db.getAll(DBManager.TABLE_JAPANESE).getCount();
+
+        ((TextView)findViewById(R.id.tvHanjaCnt)).setText(String.format(getString(R.string.HANJA_CNT), mandarinCnt));
+        ((TextView)findViewById(R.id.tvChineseCnt)).setText(String.format(getString(R.string.HSK_CNT), chineseCnt));
+        ((TextView)findViewById(R.id.tvJapaneseCnt)).setText(String.format(getString(R.string.JLPT_CNT), japaneseCnt));
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
+            case R.id.btnDeleteLog:
+                mLogs.clear();
+                mAdapter.notifyDataSetChanged();
+                break;
             case R.id.btnMakeDB:
                 makeNewDB();
                 break;
             case R.id.btnGetDB:
-                Toast.makeText(this, "GET DB", Toast.LENGTH_SHORT).show();
-                break;
+                try {
+                    File dbFile = getDatabasePath(DBConsts.DB_NAME);
+                    if (dbFile.exists()) {
+                        mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_DEFAULT, 0, "생성된 DB 존재."));
+                        mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_INFORMATION, 0, "size : " + dbFile.length()));
+
+                        File fDir = Environment.getExternalStorageDirectory();
+                        File outputDB = new File(fDir.getAbsolutePath() + "/" + DBConsts.DB_NAME);
+                        if(!outputDB.exists())
+                            outputDB.createNewFile();
+
+                        mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_DEFAULT, 0, "DB 출력 : " + outputDB.getPath()));
+
+                        FileInputStream fis = new FileInputStream(dbFile);
+                        FileOutputStream fos = new FileOutputStream(outputDB);
+                        byte [] buffer = new byte[1024];
+                        int read = 0;
+                        while((read = fis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, read);
+                        }
+
+                        fis.close();
+                        fos.close();
+                        mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_DEFAULT, 0, "DB 출력 완료"));
+
+                    } else {
+                        mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "생성된 DB가 없음."));
+                    }
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
         }
     }
 

@@ -14,30 +14,37 @@
             android:id="@+id/tvHanjaCnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="입력된 한자 : %d" />
+            android:text="@string/HANJA_CNT" />
         <TextView
             android:id="@+id/tvChineseCnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="입력된 HSK : %d"/>
+            android:text="@string/HSK_CNT"/>
         <TextView
             android:id="@+id/tvJapaneseCnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="입력된 JLPT : %d"/>
+            android:text="@string/JLPT_CNT"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDeleteLog"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:text="로그 삭제" />
 
     <Button
         android:id="@+id/btnGetDB"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="50dp"
+        android:layout_above="@id/btnDeleteLog"
         android:text="DB 추출" />
 
     <Button
         android:id="@+id/btnMakeDB"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_above="@id/btnGetDB"
         android:text="DB 생성"/>
 
