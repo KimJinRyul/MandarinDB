@@ -9,7 +9,8 @@
         android:id="@+id/tvLog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="9dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="11dp"
         android:textColor="#c8c8c8" />
 
 </RelativeLayout>

@@ -116,7 +116,11 @@ public class DBManager {
     }
 
     public boolean isExistInDB(int table, int type, String [] item) {
-        return get(table, type, item).getCount() != 0;
+        boolean bRet = false;
+        Cursor cursor = get(table, type, item);
+        if(cursor.getCount() > 0) bRet = true;
+        cursor.close();
+        return bRet;
     }
 
     public boolean insertMandarin(Handler handler, String ganja, String bunja, String yakja,
@@ -159,7 +163,8 @@ public class DBManager {
             ch = "" + ganja.charAt(i);
             cursor = get(TABLE_MANDARIN, TYPE_GANJA, new String[] {ch});
             if(cursor.getCount() == 0) {
-                handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "중국어 입력 중... \"" + ch + "\"자는 이미 DB에 없습니다."));
+                cursor.close();
+                handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "중국어 입력 중... \"" + ch + "\"자는 DB에 없습니다."));
                 return false;
             } else {
                 while(cursor.moveToNext()) {
@@ -168,6 +173,7 @@ public class DBManager {
                         handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 HSK:" + lvHSK + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
                     }
                 }
+                cursor.close();
             }
         }
 
@@ -198,6 +204,7 @@ public class DBManager {
             ch = "" + yakja.charAt(i);
             cursor = get(TABLE_MANDARIN, TYPE_YAKJA, new String[] {ch});
             if(cursor.getCount() == 0) {
+                cursor.close();
                 handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "일본어 입력 중... \"" + ch + "\"자는 DB에 없습니다."));
                 return false;
             } else {
@@ -207,6 +214,7 @@ public class DBManager {
                         handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 JLPT:" + lvJLPT + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
                     }
                 }
+                cursor.close();
             }
         }
 

@@ -1,10 +1,12 @@
 package jrkim.mandarindb;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     public final static int MESSAGE_COMPLETE    = 1000;
     public final static int MESSAGE_LOG         = 1001;
+    public final static int MESSAGE_MAKE_NEWDB  = 1002;
 
     private ListView mListView = null;
     private LogAdapter mAdapter = null;
@@ -51,15 +54,31 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     public void handleMessage(Message msg) {
         switch(msg.what) {
+            case MESSAGE_MAKE_NEWDB:
+                makeNewDB();
+                break;
             case MESSAGE_COMPLETE:
             findViewById(R.id.btnMakeDB).setEnabled(true);
             findViewById(R.id.btnGetDB).setEnabled(true);
-            updateText();
+                updateText();
             break;
             case MESSAGE_LOG:
                 mLogs.add(new LogInfo((String) msg.obj, msg.arg1));
                 mAdapter.notifyDataSetChanged();
                 mListView.setSelection(mLogs.size() - 1);
+                switch(msg.arg1) {
+                    case LogInfo.TYPE_DEFAULT:
+                    case LogInfo.TYPE_INFORMATION:
+                        Log.i("jrkim", (String)msg.obj);
+                        break;
+                    case LogInfo.TYPE_WARNING:
+                        Log.w("jrkim", (String)msg.obj);
+                        break;
+                    case LogInfo.TYPE_ERROR:
+                        Log.e("jrkim", (String)msg.obj);
+                        break;
+                }
+
                 break;
         }
     }
@@ -86,13 +105,19 @@ public class MainActivity extends Activity implements View.OnClickListener{
         DBManager db = DBManager.getInstance(this);
         db.open();
 
-        int mandarinCnt = db.getAll(DBManager.TABLE_MANDARIN).getCount();
-        int chineseCnt = db.getAll(DBManager.TABLE_CHINESE).getCount();
-        int japaneseCnt = db.getAll(DBManager.TABLE_JAPANESE).getCount();
+        Cursor mandarinCursor = db.getAll(DBManager.TABLE_MANDARIN);
+        Cursor chineseCursor = db.getAll(DBManager.TABLE_CHINESE);
+        Cursor japaneseCursor = db.getAll(DBManager.TABLE_JAPANESE);
 
-        ((TextView)findViewById(R.id.tvHanjaCnt)).setText(String.format(getString(R.string.HANJA_CNT), mandarinCnt));
-        ((TextView)findViewById(R.id.tvChineseCnt)).setText(String.format(getString(R.string.HSK_CNT), chineseCnt));
-        ((TextView)findViewById(R.id.tvJapaneseCnt)).setText(String.format(getString(R.string.JLPT_CNT), japaneseCnt));
+        ((TextView)findViewById(R.id.tvHanjaCnt)).setText(String.format(getString(R.string.HANJA_CNT), mandarinCursor.getCount()));
+        ((TextView)findViewById(R.id.tvChineseCnt)).setText(String.format(getString(R.string.HSK_CNT), chineseCursor.getCount()));
+        ((TextView)findViewById(R.id.tvJapaneseCnt)).setText(String.format(getString(R.string.JLPT_CNT), japaneseCursor.getCount()));
+
+        mandarinCursor.close();
+        chineseCursor.close();
+        japaneseCursor.close();
+
+        db.close();
     }
 
     @Override
@@ -103,7 +128,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.btnMakeDB:
-                makeNewDB();
+                mHandler.sendEmptyMessage(MESSAGE_MAKE_NEWDB);
                 break;
             case R.id.btnGetDB:
                 try {
@@ -267,9 +292,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     db.close();
 
                     mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_INFORMATION, 0, "중국어 DB 생성 완료.."));
-                    mHandler.sendEmptyMessage(MESSAGE_COMPLETE);
                 } catch (Exception e) {
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, e.getMessage()));
                     e.printStackTrace();
+                } finally {
+                    mHandler.sendEmptyMessage(MESSAGE_COMPLETE);
                 }
             }
         }.start();
