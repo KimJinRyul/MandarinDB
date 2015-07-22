@@ -95,8 +95,8 @@
           <file leaf-file-name="dbinsert.tbl" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/src/main/assets/dbinsert.tbl">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.6375465">
-                  <caret line="420" column="26" selection-start-line="420" selection-start-column="26" selection-end-line="420" selection-end-column="26" />
+                <state vertical-scroll-proportion="0.55576205">
+                  <caret line="69" column="6" selection-start-line="69" selection-start-column="6" selection-end-line="69" selection-end-column="6" />
                   <folding />
                 </state>
               </provider>
@@ -2139,8 +2139,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/assets/dbinsert.tbl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6375465">
-          <caret line="420" column="26" selection-start-line="420" selection-start-column="26" selection-end-line="420" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.55576205">
+          <caret line="69" column="6" selection-start-line="69" selection-start-column="6" selection-end-line="69" selection-end-column="6" />
           <folding />
         </state>
       </provider>
