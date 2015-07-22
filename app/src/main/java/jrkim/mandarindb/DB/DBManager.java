@@ -159,6 +159,7 @@ public class DBManager {
         String ch = "";
         Cursor cursor = null;
         int lv = 0;
+        String dbPinyin = "";
         for(int i = 0; i < ganja.length(); i++) {
             ch = "" + ganja.charAt(i);
             cursor = get(TABLE_MANDARIN, TYPE_GANJA, new String[] {ch});
@@ -170,8 +171,16 @@ public class DBManager {
                 while(cursor.moveToNext()) {
                     lv = cursor.getInt(cursor.getColumnIndex(DBConsts._LEVEL_HSK));
                     if(lv != lvHSK) {
-                        handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 HSK:" + lvHSK + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                        if(lvHSK < lv) {
+                            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "입력하려는 HSK:" + lvHSK + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                        } else {
+                            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 HSK:" + lvHSK + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                        }
                     }
+
+                    // TODO , 병음도 비교해 보자. 우선 db_tbl에서 각 단어별로 병음을 구분해 주어야 한다.
+                    //dbPinyin = cursor.getString(cursor.getColumnIndex(DBConsts._PINYIN));
+
                 }
                 cursor.close();
             }
@@ -210,8 +219,11 @@ public class DBManager {
             } else {
                 while(cursor.moveToNext()) {
                     lv = cursor.getInt(cursor.getColumnIndex(DBConsts._LEVEL_JLPT));
-                    if(lv > lvJLPT) {
-                        handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 JLPT:" + lvJLPT + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                    if(lv != lvJLPT) {
+                        if(lv > lvJLPT)
+                            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_ERROR, 0, "입력하려는 JLPT:" + lvJLPT + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
+                        else
+                            handler.sendMessage(handler.obtainMessage(MainActivity.MESSAGE_LOG, LogInfo.TYPE_WARNING, 0, "입력하려는 JLPT:" + lvJLPT + ", 한자 DB에" + ch + "의 레벨은 " + lv + "으로 서로 다릅니다."));
                     }
                 }
                 cursor.close();
