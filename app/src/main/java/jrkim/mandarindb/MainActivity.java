@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                         mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_LOG, LogInfo.TYPE_INFORMATION, 0, "size : " + dbFile.length()));
 
                         File fDir = Environment.getExternalStorageDirectory();
-                        File outputDB = new File(fDir.getAbsolutePath() + "/" + DBConsts.DB_NAME);
+                        File outputDB = new File(fDir.getAbsolutePath() + "/" + DBConsts.DB_NAME + "_20150728_1551");
                         if(!outputDB.exists())
                             outputDB.createNewFile();
 

@@ -143,9 +143,6 @@ public class DBManager {
         values.put(DBConsts._LEVEL_HANJA, lvHanja);
         values.put(DBConsts._LEVEL_HSK, lvHSK);
         values.put(DBConsts._LEVEL_JLPT, lvJLPT);
-        values.put(DBConsts._LEARNING, 0);
-        values.put(DBConsts._ANSWERED, "");
-        values.put(DBConsts._TESTED, "");
         mDB.insert(DBConsts._TABLE_MANDARIN, null, values);
         return true;
     }
@@ -192,9 +189,6 @@ public class DBManager {
         values.put(DBConsts._RAWPINYIN, rawpinyin);
         values.put(DBConsts._MEANING, meaning);
         values.put(DBConsts._LEVEL_HSK, lvHSK);
-        values.put(DBConsts._LEARNING, 0);
-        values.put(DBConsts._TESTED, "");
-        values.put(DBConsts._ANSWERED, "");
         mDB.insert(DBConsts._TABLE_CHINESE, null, values);
         return true;
     }
@@ -235,9 +229,6 @@ public class DBManager {
         values.put(DBConsts._JAPANESE, japanese);
         values.put(DBConsts._MEANING, meaning);
         values.put(DBConsts._LEVEL_JLPT, lvJLPT);
-        values.put(DBConsts._LEARNING, 0);
-        values.put(DBConsts._TESTED, "");
-        values.put(DBConsts._ANSWERED, "");
         mDB.insert(DBConsts._TABLE_JAPANESE, null, values);
         return true;
     }

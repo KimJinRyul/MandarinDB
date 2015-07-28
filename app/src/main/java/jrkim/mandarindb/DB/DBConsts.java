@@ -36,10 +36,7 @@ public class DBConsts {
                     _MEANING + " text not null, " +
                     _LEVEL_HANJA + " integer not null, " +
                     _LEVEL_HSK + " integer not null, " +
-                    _LEVEL_JLPT + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
+                    _LEVEL_JLPT + " integer not null);";
 
     // table for Chinese Words
     public final static String _TABLE_CHINESE = "_table_chinese";
@@ -49,10 +46,7 @@ public class DBConsts {
                     _PINYIN + " text not null, " +
                     _RAWPINYIN + " text not null, " +
                     _MEANING + " text not null, " +
-                    _LEVEL_HSK + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
+                    _LEVEL_HSK + " integer not null);";
 
     // table for Japanese Words
     public final static String _TABLE_JAPANESE = "_table_japanese";
@@ -61,47 +55,5 @@ public class DBConsts {
                     _YAKJA + " text not null, " +
                     _JAPANESE + " text not null, " +
                     _MEANING + " text not null, " +
-                    _LEVEL_JLPT + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
-
-    /*
-    // table for User Custom Hanja Dictionary
-    public final static String _TABLE_USERMANDARIN = "_table_usermandarin";
-    public final static String _CREATE_USERMANDARIN =
-            "create table " + _TABLE_USERMANDARIN + "(" + _ID + " integer primary key autoincrement, " +
-                    _BUNJA + " text not null, " +
-                    _KOREAN + " text not null, " +
-                    _MEANING + " text not null, " +
-                    _LEVEL_HANJA + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
-
-    // table for User Custom Chinese Dictionary
-    public final static String _TABLE_USERCHINESE = "_table_userchinese";
-    public final static String _CREATE_USERCHINESE =
-            "create table " + _TABLE_USERCHINESE + "(" + _ID + " integer primary key autoincrement, " +
-                    _GANJA + " text not null, " +
-                    _PINYIN + " text not null, " +
-                    _RAWPINYIN + " text not null, " +
-                    _MEANING + " text not null, " +
-                    _LEVEL_HSK + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
-
-    // table for User Custom Japanese Dictionary
-    public final static String _TABLE_USERJAPANESE = "_table_userjapanese";
-    public final static String _CREATE_USERJAPANESE =
-            "create table " + _TABLE_USERJAPANESE + "(" + _ID + " integer primary key autoincrement, " +
-                    _YAKJA + " text not null, " +
-                    _JAPANESE + " text not null, " +
-                    _MEANING + " text not null, " +
-                    _LEVEL_JLPT + " integer not null, " +
-                    _LEARNING + " integer not null, " +
-                    _TESTED + " text not null, " +
-                    _ANSWERED + " text not null);";
-    */
+                    _LEVEL_JLPT + " integer not null);";
 }
